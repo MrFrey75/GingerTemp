@@ -17,6 +17,8 @@ The solution is structured into multiple projects to separate concerns and impro
 
 - **GingerTemplate.WebApi**: This project contains the Web API implementation using ASP.NET Core. It exposes endpoints for client applications to interact with the backend services.
 
+    - **Endpoints**: This folder contains the API controllers and route definitions.
+
 - **GingerTemplate.Data**: This project contains data access implementations, repositories, and database context. It is responsible for interacting with the database and performing CRUD operations. Will be easily switched to any database provider. But designed with Sqlite for development and testing purposes.
 
 - **GingerTemplate.DesktopApp**: AvaloniaUI desktop application project. MVVM structure with views, view models, and models. 
@@ -29,12 +31,15 @@ The solution is structured into multiple projects to separate concerns and impro
 
 ## Core Services
 The `GingerTemplate.Core` project includes several core services that provide essential functionality for the application:
-- **AuthenticationService**: Handles user authentication and authorization.
-- **UserService**: Manages user-related operations such as registration, profile management, and password recovery.
-- **Central LoggingService**: Provides logging capabilities for tracking application events and errors. Uses serilog and allows logging to various sinks (console, file, etc.).
-- **EmailService**: Facilitates sending emails for notifications, confirmations, and alerts.
-- **DataValidationService**: Validates data inputs to ensure they meet specified criteria before processing.
-- **ConfigurationService**: Manages application configuration settings and environment variables.
+- **Authentication Service**: Handles user authentication and authorization.
+- **User Profile Service**: Manages user-related operations such as registration, profile management, and password recovery. Including JWT token generation and validation. Includes role-based access control.
+- **Central Logging Service**: Provides logging capabilities for tracking application events and errors. Uses serilog and allows logging to various sinks (console, file, etc.).
+- **Email Service**: Facilitates sending emails for notifications, confirmations, and alerts.
+- **Data Validation Service**: Validates data inputs to ensure they meet specified criteria before processing.
+- **Configuration Service**: Manages application configuration settings and environment variables.
+- **Notification Service**: Sends notifications to users via different channels (email, SMS, push notifications).
+- **Caching Service**: Implements caching mechanisms to improve application performance and reduce database load.
+- **Plugin Service**: Supports extensibility by allowing the integration of plugins or modules into the application.
 
 ## Getting Started
 
@@ -220,6 +225,197 @@ The application uses a centralized logging service:
 - Configured for console, file, and structured logging
 - Different log levels for development and production
 - Integration with Serilog or similar frameworks
+
+## Error Handling
+
+### Enhanced Error Handling Strategy
+
+Ginger Template implements a robust, multi-layered error handling approach to ensure reliability, maintainability, and user-friendly error communication.
+
+### Custom Exception Hierarchy
+
+The framework defines a hierarchy of custom exceptions for different error scenarios:
+
+```csharp
+// Base exception for all application exceptions
+public class ApplicationException : Exception { }
+
+// Domain/business logic exceptions
+public class BusinessLogicException : ApplicationException { }
+public class ValidationException : ApplicationException { }
+public class AuthenticationException : ApplicationException { }
+public class AuthorizationException : ApplicationException { }
+
+// Data access exceptions
+public class RepositoryException : ApplicationException { }
+public class DatabaseException : ApplicationException { }
+
+// External service exceptions
+public class ExternalServiceException : ApplicationException { }
+public class EmailServiceException : ExternalServiceException { }
+
+// Configuration exceptions
+public class ConfigurationException : ApplicationException { }
+```
+
+### Global Exception Handling Middleware
+
+The Web API project includes middleware for centralized exception handling:
+
+- **Exception Logging**: All exceptions are logged with full stack traces and context
+- **HTTP Response Mapping**: Exceptions are mapped to appropriate HTTP status codes
+- **Structured Error Responses**: Consistent JSON error format returned to clients
+- **Sensitive Data Protection**: Stack traces hidden in production environment
+
+**Example Error Response:**
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input provided",
+    "details": [
+      {
+        "field": "email",
+        "message": "Email format is invalid"
+      }
+    ],
+    "timestamp": "2025-12-10T10:30:00Z",
+    "traceId": "0HN1GKOD5HLSA:00000001"
+  }
+}
+```
+
+### Try-Catch-Log Pattern
+
+All service methods implement standardized error handling:
+
+```csharp
+public async Task<User> GetUserAsync(int id)
+{
+    try
+    {
+        ValidateUserId(id);
+        var user = await _userRepository.GetUserAsync(id);
+        
+        if (user == null)
+        {
+            throw new BusinessLogicException($"User with ID {id} not found");
+        }
+        
+        return user;
+    }
+    catch (DatabaseException ex)
+    {
+        _logger.LogError($"Database error retrieving user {id}: {ex.Message}");
+        throw new RepositoryException("Failed to retrieve user from database", ex);
+    }
+    catch (ValidationException ex)
+    {
+        _logger.LogWarning($"Validation failed for user ID {id}: {ex.Message}");
+        throw;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Unexpected error retrieving user {id}: {ex}");
+        throw new ApplicationException("An unexpected error occurred", ex);
+    }
+}
+```
+
+### Input Validation
+
+Comprehensive input validation prevents invalid data from propagating through the system:
+
+- **Fluent Validation**: Data annotation and fluent validation frameworks
+- **Custom Validators**: Business logic-specific validation rules
+- **Early Validation**: Input validation at API controller level
+- **Detailed Error Messages**: Clear feedback on validation failures
+
+### API Error Responses
+
+The Web API returns standardized HTTP status codes:
+
+- **200 OK**: Successful request
+- **400 Bad Request**: Validation errors or malformed input
+- **401 Unauthorized**: Authentication required
+- **403 Forbidden**: Insufficient permissions
+- **404 Not Found**: Resource not found
+- **409 Conflict**: Business logic violation
+- **500 Internal Server Error**: Unexpected server errors
+- **503 Service Unavailable**: External service failures
+
+### Retry Strategies
+
+For transient failures, the framework implements resilience patterns:
+
+```csharp
+// Polly retry policy for transient failures
+var retryPolicy = Policy
+    .Handle<HttpRequestException>()
+    .Or<TimeoutException>()
+    .WaitAndRetryAsync(
+        retryCount: 3,
+        sleepDurationProvider: attempt => 
+            TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+        onRetry: (outcome, timespan, retryCount, context) =>
+        {
+            _logger.LogWarning(
+                $"Retry attempt {retryCount} after {timespan.TotalSeconds}s");
+        });
+```
+
+### Logging Best Practices
+
+Error logging follows these principles:
+
+1. **Log Levels**:
+   - **Fatal**: Application cannot continue
+   - **Error**: Operation failed, should be investigated
+   - **Warning**: Unexpected but recoverable condition
+   - **Information**: Normal application flow events
+   - **Debug**: Detailed diagnostic information
+
+2. **Context Information**:
+   - User ID (when applicable)
+   - Request ID/Trace ID for correlation
+   - Method/operation being performed
+   - Input parameters (sanitized)
+   - Execution duration
+
+3. **Security**:
+   - Never log passwords or sensitive tokens
+   - Sanitize user input before logging
+   - Use structured logging for easier analysis
+   - Redact PII (Personally Identifiable Information)
+
+### Exception Recovery Strategies
+
+Different exception types have specific recovery approaches:
+
+| Exception Type | Recovery Strategy | User Message |
+|---|---|---|
+| `ValidationException` | Return 400 Bad Request | Show validation errors |
+| `AuthenticationException` | Redirect to login | "Please log in again" |
+| `AuthorizationException` | Return 403 Forbidden | "You don't have permission" |
+| `RepositoryException` | Retry or fallback | "Database temporarily unavailable" |
+| `ExternalServiceException` | Retry with backoff | "Service temporarily unavailable" |
+| `ApplicationException` | Log & return 500 | "An error occurred, please try again" |
+
+### Health Checks
+
+The application includes health check endpoints to monitor system status:
+
+```bash
+GET /health
+GET /health/ready
+GET /health/live
+```
+
+Health checks monitor:
+- Database connectivity
+- External service availability
+- Memory and resource usage
+- Cache system status
 
 ## Contributing
 
