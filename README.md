@@ -17,7 +17,7 @@ The solution is structured into multiple projects to separate concerns and impro
 
 - **GingerTemplate.WebApi**: This project contains the Web API implementation using ASP.NET Core. It exposes endpoints for client applications to interact with the backend services.
 
-- **GingerTemplate.Data**: This project contains data access implementations, repositories, and database context. It is responsible for interacting with the database and performing CRUD operations. Will be easily switched to any database provider. B ut designed with Sqlite for development and testing purposes.
+- **GingerTemplate.Data**: This project contains data access implementations, repositories, and database context. It is responsible for interacting with the database and performing CRUD operations. Will be easily switched to any database provider. But designed with Sqlite for development and testing purposes.
 
 - **GingerTemplate.DesktopApp**: AvaloniaUI desktop application project. MVVM structure with views, view models, and models. 
 
