@@ -1,0 +1,45 @@
+{
+  "Application": {
+    "AppName": "GingerTemplate",
+    "AppVersion": "1.0.0",
+    "Environment": "Production",
+    "EnableDetailedErrors": false
+  },
+  "Database": {
+    "ConnectionString": "Data Source=prod.db",
+    "EnableMigrations": false,
+    "CommandTimeout": 60
+  },
+  "Logging": {
+    "LogLevel": "Warning",
+    "Sinks": ["Console", "File"],
+    "LogFormat": "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {CorrelationId} {Message:lj}{NewLine}{Exception}",
+    "EnableRequestLogging": true
+  },
+  "Api": {
+    "ApiName": "GingerTemplate API",
+    "ApiVersion": "v1",
+    "EnableSwagger": false,
+    "EnableCors": true,
+    "AllowedOrigins": ["https://gingertemplate.com"]
+  },
+  "Security": {
+    "JwtSecret": "set-this-to-a-strong-secret-key-from-environment",
+    "JwtExpirationMinutes": 120,
+    "RequireHttps": true,
+    "PasswordMinLength": 12,
+    "EnableTwoFactor": true
+  },
+  "Email": {
+    "SmtpServer": "smtp.mailprovider.com",
+    "SmtpPort": 587,
+    "FromAddress": "noreply@gingertemplate.com",
+    "FromName": "GingerTemplate",
+    "EnableSsl": true
+  },
+  "Cache": {
+    "EnableCache": true,
+    "CacheType": "Redis",
+    "DefaultExpiration": 1800
+  }
+}

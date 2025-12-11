@@ -1,5 +1,7 @@
 # Ginger Template - Coding Standards
 
+> 📚 **Part of the [GingerTemplate Documentation](README.md)** - See also: [Quick Start](QUICKSTART.md) | [Project Structure](PROJECT_STRUCTURE.md) | [Folder Structure](FOLDER_STRUCTURE.md)
+
 This document outlines the coding standards and conventions to be followed across all GingerTemplate projects.
 
 ## C# Naming Conventions

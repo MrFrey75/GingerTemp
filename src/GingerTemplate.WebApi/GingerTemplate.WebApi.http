@@ -1,0 +1,6 @@
+@GingerTemplate.WebApi_HostAddress = http://localhost:5169
+
+GET {{GingerTemplate.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

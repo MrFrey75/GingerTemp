@@ -1,50 +1,97 @@
 # Ginger Template
 
-A fully functional C# .NET template for creating modern, scalable applications with multiple client implementations (Web API, Desktop, Web App, and Mobile).
+A fully functional C# .NET template for creating modern, scalable applications with multiple client implementations (Web API, Desktop, Web App, CLI, and Mobile).
 
 ## Description
 Ginger Template provides a comprehensive, production-ready foundation for building C# .NET applications. It follows industry best practices including clean architecture, dependency injection, and MVVM patterns, offering a solid starting point for enterprise-level development.
 
+## 📚 Documentation
+
+Quick links to all documentation:
+- **[QUICKSTART.md](QUICKSTART.md)** - Get up and running in 5 minutes
+- **[FOLDER_STRUCTURE.md](FOLDER_STRUCTURE.md)** - Complete directory and file organization
+- **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Detailed project breakdown and dependencies
+- **[CODING_STANDARDS.md](CODING_STANDARDS.md)** - C# code conventions and best practices
+- **[IMPLEMENTATION_COMPLETION.md](IMPLEMENTATION_COMPLETION.md)** - Comprehensive implementation details and examples
+
+## 📑 Table of Contents
+
+- [Solution Structure](#solution-structure)
+- [Core Services](#core-services)
+- [Getting Started](#getting-started)
+- [Building & Running](#building--running)
+- [Architecture & Design Patterns](#architecture--design-patterns)
+- [Project Details](#project-details)
+- [Configuration](#configuration-)
+- [Database](#database)
+- [Security Features](#security-features-)
+- [Logging](#logging-)
+- [Error Handling](#error-handling)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Solution Structure
-The solution is structured into multiple projects to separate concerns and improve maintainability:
+The solution is structured into 7 main projects to separate concerns and improve maintainability:
 
-- **GingerTemplate.Core**: This project contains the core application logic, including interfaces, abstractions, and shared utilities.
-    - **Models**: This folder contains the data models used throughout the application.
-    - **Services**: This folder contains service interfaces and implementations for business logic.
-    - **Utilities**: This folder contains utility classes and helper functions.
-    - **Extensions**: This folder contains extension methods to enhance existing classes and types.
-    - **Enums**: This folder contains enumeration types used in the application.
+- **GingerTemplate.Core**: Core application logic, data access layer, and shared utilities. Contains business entities, services, repositories, and the Entity Framework Core database context configured for SQLite.
+    - **Models**: Domain models and data transfer objects.
+    - **Services**: Service interfaces and implementations for business logic (Logging, Configuration).
+    - **Repositories**: Generic repository pattern for data access (IRepository<T>).
+    - **Context**: Entity Framework Core database context and configurations.
+    - **Migrations**: Database schema migrations.
+    - **Utilities**: Helper classes (Guard validation, RetryPolicy with exponential backoff, ExecutionTimer).
+    - **Converters**: Type conversion utilities (String, Enum, DateTime, Collection converters).
+    - **Configuration**: Typed configuration classes and file management (ApplicationSettings, DatabaseSettings, etc.).
+    - **Extensions**: 14 extension method files (Null, Nullable, Enum, Collection, DateTime, Int, Bool, Double, List, Dictionary, TimeSpan, Char, Decimal, Json).
+    - **Enums**: Application enumeration types.
+    - **Exceptions**: Custom exception hierarchy for error handling.
 
-- **GingerTemplate.WebApi**: This project contains the Web API implementation using ASP.NET Core. It exposes endpoints for client applications to interact with the backend services.
+- **GingerTemplate.WebApi**: ASP.NET Core REST API that exposes backend services and business logic through RESTful endpoints.
+    - **Controllers**: API endpoint controllers.
+    - **Middleware**: Exception handling and request processing middleware.
 
-    - **Endpoints**: This folder contains the API controllers and route definitions.
+- **GingerTemplate.DesktopApp**: Cross-platform desktop application using Avalonia UI with MVVM architecture. Provides a rich client interface for desktop users.
 
-- **GingerTemplate.Data**: This project contains data access implementations, repositories, and database context. It is responsible for interacting with the database and performing CRUD operations. Will be easily switched to any database provider. But designed with Sqlite for development and testing purposes.
+- **GingerTemplate.WebApp**: ASP.NET Core Razor Pages web application providing a user interface for web-based interaction with backend services.
 
-- **GingerTemplate.DesktopApp**: AvaloniaUI desktop application project. MVVM structure with views, view models, and models. 
+- **GingerTemplate.CLI**: Command-line interface application for system administration and batch operations. Provides administrative tools and automated task execution.
+    - **Commands**: Command definitions and handlers for CLI operations.
+        - **-help**: Displays help information for available commands.
+        - **-list-users**: Lists all users in the system.
+        - **-add-user**: Adds a new user with specified details.
+        - **-remove-user**: Removes a user by ID.
+    - **Options**: Command-line argument parsing and configuration using System.CommandLine.
+    - **Output**: Formatted console output and result display. Using Spectre.Console for rich text formatting.
 
-- **GingerTemplate.WebApp**: This project contains the web application implementation using ASP.NET Core. It provides a user interface for interacting with the backend services.
+- **GingerTemplate.MobileApp**: Mobile application (ready for .NET MAUI or Xamarin). Provides a foundation for cross-platform mobile development.
 
-- **GingerTemplate.AndroidApp**: This project contains the Android application implementation using Xamarin or .NET MAUI.
-
-- **GingerTemplate.Tests**: This project contains unit tests and integration tests for the application.
+- **GingerTemplate.Tests**: Unit tests and integration tests using xUnit and Moq for comprehensive test coverage.
 
 ## Core Services
 The `GingerTemplate.Core` project includes several core services that provide essential functionality for the application:
-- **Authentication Service**: Handles user authentication and authorization.
-- **User Profile Service**: Manages user-related operations such as registration, profile management, and password recovery. Including JWT token generation and validation. Includes role-based access control.
-- **Central Logging Service**: Provides logging capabilities for tracking application events and errors. Uses serilog and allows logging to various sinks (console, file, etc.).
+
+**✅ Implemented:**
+- **Central Logging Service** ✅: Provides correlation-aware structured logging with context properties. Uses Serilog with console, file, and Seq sinks. Integrated across all projects (WebApi, WebApp, CLI).
+- **Configuration Service** ✅: Manages JSON-based configuration with hierarchical key access, typed section loading, and environment-specific overrides (dev/prod). Includes `ConfigurationFileManager` for file operations.
+
+**🔄 In Progress:**
+- **Authentication Service**: Handles user authentication and authorization with JWT tokens.
+- **User Profile Service**: Manages user-related operations such as registration, profile management, and password recovery with role-based access control.
+
+**📋 Planned:**
 - **Email Service**: Facilitates sending emails for notifications, confirmations, and alerts.
-- **Data Validation Service**: Validates data inputs to ensure they meet specified criteria before processing.
-- **Configuration Service**: Manages application configuration settings and environment variables.
-- **Notification Service**: Sends notifications to users via different channels (email, SMS, push notifications).
-- **Caching Service**: Implements caching mechanisms to improve application performance and reduce database load.
-- **Plugin Service**: Supports extensibility by allowing the integration of plugins or modules into the application.
+- **Data Validation Service**: Validates data inputs using FluentValidation framework.
+- **Notification Service**: Sends notifications via multiple channels (email, SMS, push).
+- **Caching Service**: Implements memory and Redis caching mechanisms.
+- **Background Task Service**: Manages scheduled jobs and background processing.
+- **File Storage Service**: Handles file uploads, downloads, and storage.
+- **Plugin Service**: Supports extensibility through plugin architecture.
+- **Theme Management Service**: Application theme and UI customization.
 
 ## Getting Started
 
 ### Prerequisites
-- .NET 8.0 SDK or higher
+- .NET 10.0 SDK or higher
 - Visual Studio 2022 or Visual Studio Code
 - SQLite (for development and testing)
 - Avalonia Studio (optional, for desktop app development)
@@ -65,7 +112,7 @@ The `GingerTemplate.Core` project includes several core services that provide es
 
 4. Run database migrations:
    ```bash
-   dotnet ef database update --project GingerTemplate.Data
+   dotnet ef database update --project src/GingerTemplate.Core
    ```
 
 ## Building & Running
@@ -77,17 +124,22 @@ dotnet build
 
 ### Run Web API
 ```bash
-dotnet run --project GingerTemplate.WebApi
+dotnet run --project src/GingerTemplate.WebApi
 ```
 
 ### Run Web Application
 ```bash
-dotnet run --project GingerTemplate.WebApp
+dotnet run --project src/GingerTemplate.WebApp
 ```
 
 ### Run Desktop Application
 ```bash
-dotnet run --project GingerTemplate.DesktopApp
+dotnet run --project src/GingerTemplate.DesktopApp
+```
+
+### Run CLI Application
+```bash
+dotnet run --project src/GingerTemplate.CLI
 ```
 
 ### Run Tests
@@ -99,29 +151,34 @@ dotnet test
 
 ### Clean Architecture
 The solution follows clean architecture principles with clear separation of concerns:
-- **Presentation Layer**: Web API, Web App, Desktop App, and Mobile App projects
+- **Presentation Layer**: Web API, Web App, Desktop App, CLI, and Mobile App projects
 - **Business Logic Layer**: Core services and business logic
 - **Data Access Layer**: Repository pattern and Entity Framework Core
 - **Cross-Cutting Concerns**: Logging, validation, and configuration
 
 ### Design Patterns Implemented
-- **Repository Pattern**: Data access abstraction in GingerTemplate.Data
+- **Repository Pattern**: Data access abstraction in GingerTemplate.Core
 - **Dependency Injection**: IoC container configured in startup
 - **MVVM**: Model-View-ViewModel pattern in DesktopApp
 - **Service Locator**: Service registration and resolution
 - **Factory Pattern**: Object creation and instantiation
+- **Command Pattern**: CLI command handling with System.CommandLine
 
 ## Project Details
 
 ### GingerTemplate.Core
-Core application logic, interfaces, and abstractions.
+Core application logic, interfaces, abstractions, and data access layer.
 
 **Subfolders:**
 - **Models**: Data transfer objects and domain models
 - **Services**: Service interfaces and base implementations
+- **Repositories**: Generic repository pattern for data access
+- **Context**: Entity Framework Core database context
+- **Migrations**: Database schema migrations
 - **Utilities**: Helper functions and extension methods
 - **Extensions**: LINQ and type extension methods
 - **Enums**: Application enumeration types
+- **Exceptions**: Custom exception hierarchy
 
 ### GingerTemplate.WebApi
 ASP.NET Core REST API implementation exposing backend services.
@@ -132,16 +189,6 @@ ASP.NET Core REST API implementation exposing backend services.
 - JWT authentication
 - Input validation
 - Exception handling middleware
-
-### GingerTemplate.Data
-Data access layer with Entity Framework Core.
-
-**Features:**
-- Generic repository pattern
-- Unit of Work implementation
-- Database context configuration
-- SQLite support (swappable to other providers)
-- Migration support
 
 ### GingerTemplate.DesktopApp
 Cross-platform Avalonia desktop application with MVVM architecture.
@@ -160,7 +207,17 @@ ASP.NET Core Razor Pages or MVC web application.
 - Responsive UI
 - Form validation
 
-### GingerTemplate.AndroidApp
+### GingerTemplate.CLI
+Command-line interface for administrative operations and batch processing.
+
+**Features:**
+- System.CommandLine for command parsing
+- Structured command organization
+- Serilog integration for logging
+- Repository access for data operations
+- Formatted console output
+
+### GingerTemplate.MobileApp
 Mobile application using .NET MAUI or Xamarin Forms.
 
 **Features:**
@@ -175,56 +232,79 @@ Comprehensive test coverage including unit and integration tests.
 - Unit tests for services and utilities
 - Integration tests for API endpoints
 - Data access tests
+- CLI command tests
 
-## Configuration
+## Configuration ✅
 
-### appsettings.json
-Configuration file for database connection, logging, and application settings:
+Environment-specific configuration using JSON files:
+- **ConfigurationService** loads and parses JSON config files with hierarchical key access (colon-delimited)
+- **Files**: `config.json` (development defaults), `config.production.json` (production overrides)
+- **Typed sections**: ApplicationSettings, DatabaseSettings, LoggingSettings, ApiSettings, SecuritySettings, EmailSettings, CacheSettings
+- **Access patterns**: `GetSection<T>(key)`, `GetValue<T>(key)`, `TryGetSection<T>()`, `TryGetValue<T>()`
+- **Hierarchical keys**: Example: `Database:ConnectionString` maps to nested structure in JSON
+- **Type safety**: All configuration sections are strongly typed POCO classes
+- **DI registration**: Injected in WebApi, WebApp, and CLI for global access
+
+### appsettings.json (Logging)
+Serilog configuration for console, file, and centralized logging:
 ```json
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "Data Source=gingerdb.db"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information"
-    }
+  "Serilog": {
+    "MinimumLevel": "Information",
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {CorrelationId} {Message:lj}{NewLine}{Exception}"
+        }
+      }
+    ]
   }
 }
 ```
 
 ### Environment-Specific Settings
-- `appsettings.Development.json` - Development environment
-- `appsettings.Production.json` - Production environment
-- `appsettings.Testing.json` - Testing environment
+- `config.json` - Development environment (Information log level, detailed errors, Memory cache)
+- `config.production.json` - Production environment (Warning log level, limited details, Redis cache)
 
 ## Database
+
+The application uses Entity Framework Core with SQLite for data access:
 
 ### Migrations
 Create and apply database migrations:
 ```bash
-dotnet ef migrations add MigrationName --project GingerTemplate.Data
-dotnet ef database update --project GingerTemplate.Data
+dotnet ef migrations add MigrationName --project src/GingerTemplate.Core
+dotnet ef database update --project src/GingerTemplate.Core
 ```
 
 ### Seeding Data
-The Data project includes seed data functionality for initial data population.
+The Core project includes seed data functionality for initial data population.
 
-## Security Features
+### Connection String
+Configured via `DatabaseSettings:ConnectionString` in config.json or environment-specific overrides.
 
-- JWT token-based authentication
-- Role-based authorization
-- Input validation and sanitization
-- SQL injection prevention through ORM
-- CORS configuration
-- Password hashing and encryption
+## Security Features 🔄
 
-## Logging
+Foundation implemented with planned enhancements:
+- **Input validation**: Guard clauses in Utilities for NotNull, NotNullOrWhiteSpace, GreaterThanZero checks
+- **JWT token-based authentication** (planned)
+- **Role-based authorization** (planned)
+- **SQL injection prevention** through Entity Framework Core ORM
+- **CORS configuration** (ready in WebApi)
+- **Password hashing and encryption** (planned)
 
-The application uses a centralized logging service:
-- Configured for console, file, and structured logging
-- Different log levels for development and production
-- Integration with Serilog or similar frameworks
+## Logging ✅
+
+The application uses a comprehensive centralized logging service:
+- **Serilog integration** across WebApi, WebApp, and CLI with structured JSON output
+- **Correlation tracking** via `ILoggingService.BeginCorrelationScope()` for request tracing
+- **Contextual properties** support for custom metadata in logs
+- **Environment-specific configuration**: console output for development, file/Seq for production
+- **Request logging** middleware in ASP.NET Core apps automatically logs incoming requests
+- **Log format template**: `[{Timestamp:HH:mm:ss} {Level:u3}] {CorrelationId} {Message:lj}{NewLine}{Exception}`
+- **Log levels**: Development (Information), Production (Warning)
+- **Sinks**: Console (all), File (configured), Seq (centralized)
 
 ## Error Handling
 
@@ -453,4 +533,4 @@ Health checks monitor:
 This template is provided as-is for use in your projects.
 
 ## Support & Documentation
-For detailed documentation and API references, see the individual project README files or visit the project wiki.   
+For detailed documentation and API references, see the individual project README files or visit the project wiki.
