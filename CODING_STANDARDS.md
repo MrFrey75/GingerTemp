@@ -7,6 +7,7 @@ This document outlines the coding standards and conventions to be followed acros
 ## C# Naming Conventions
 
 ### General Rules
+
 - Use **PascalCase** for type names, method names, and public properties
 - Use **camelCase** for local variables, parameters, and private fields
 - Use **UPPER_SNAKE_CASE** for constants
@@ -14,6 +15,7 @@ This document outlines the coding standards and conventions to be followed acros
 - Use meaningful, descriptive names that clearly indicate purpose
 
 ### Examples
+
 ```csharp
 // Class names - PascalCase
 public class UserService { }
@@ -39,6 +41,7 @@ private const string DEFAULT_USER_ROLE = "User";
 ## Code Organization
 
 ### File Structure
+
 - One public class per file (with exceptions for related small classes)
 - **File name matches the implementation class name, not the interface**
 - **Keep interfaces and their associated implementation classes in the same file**
@@ -49,11 +52,13 @@ private const string DEFAULT_USER_ROLE = "User";
 Interfaces must be kept with their primary implementation in the same file. This improves maintainability by keeping related code together.
 
 **File naming convention:**
+
 - File is named after the implementation class: `UserService.cs`
 - Both `IUserService` interface and `UserService` class are in the same file
 - The interface is declared first, followed by the implementation
 
 **Example structure:**
+
 ```
 GingerTemplate.Core.Services/
 ├── UserService.cs (contains IUserService and UserService)
@@ -63,6 +68,7 @@ GingerTemplate.Core.Services/
 ```
 
 **Code example:**
+
 ```csharp
 // UserService.cs
 namespace GingerTemplate.Core.Services
@@ -110,17 +116,20 @@ namespace GingerTemplate.Core.Services
 ```
 
 ### Namespace Conventions
+
 ```
 GingerTemplate.{LayerOrFeature}.{SubCategory}
 ```
 
 Examples:
+
 - `GingerTemplate.Core.Services`
 - `GingerTemplate.Core.Models`
 - `GingerTemplate.Data.Repositories`
 - `GingerTemplate.WebApi.Controllers`
 
 ### Class Organization
+
 1. Constant and readonly fields
 2. Static fields
 3. Static properties
@@ -161,6 +170,7 @@ public class UserService
 ## Formatting & Style
 
 ### Braces
+
 - Use Allman style (opening braces on new line)
 - Always include braces, even for single-line statements
 
@@ -177,14 +187,17 @@ foreach (var item in items)
 ```
 
 ### Line Length
+
 - Maximum 120 characters per line
 - Break long lines for readability
 
 ### Indentation
+
 - Use 4 spaces per indentation level
 - No tabs
 
 ### Spacing
+
 - One blank line between methods and properties
 - No blank lines at the beginning or end of code blocks
 - Space after keywords: `if (`, `for (`, `while (`
@@ -216,6 +229,7 @@ public class Example
 ## Comments & Documentation
 
 ### XML Documentation
+
 - Use XML documentation comments for all public types, methods, and properties
 - Include `<summary>`, `<param>`, and `<returns>` tags
 
@@ -233,6 +247,7 @@ public async Task<User> GetUserByIdAsync(int userId)
 ```
 
 ### Inline Comments
+
 - Use sparingly; code should be self-explanatory
 - Explain "why", not "what"
 - Use `//` for single-line comments
@@ -383,6 +398,7 @@ public void ConfigureServices(IServiceCollection services)
 ### When NOT to Use Constructor Injection
 
 Constructor injection should not be used for:
+
 - **Configuration values** (use `IConfiguration`)
 - **Non-service dependencies** (use properties or parameters)
 - **Optional behavior** (use optional interfaces with null checks)

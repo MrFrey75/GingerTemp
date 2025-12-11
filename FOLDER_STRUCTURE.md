@@ -93,13 +93,16 @@ GingerTemplate/
 ## Directory Organization Benefits
 
 ### src/ Folder
+
 - **Cleaner root**: Keeps the solution root clean with only configuration files
 - **Clear separation**: Source code is physically separated from documentation and tools
 - **Scalability**: Makes it easier to add other folders like `tests/`, `docs/`, `tools/` at the root level
 - **Industry standard**: Follows common practices used by large projects (ASP.NET, .NET Runtime, etc.)
 
 ### Project Folders
+
 Each project follows a consistent internal structure:
+
 - **Core**: Models, Services, Repositories, DbContext, Migrations, Exceptions, Extensions, Utilities, Enums, Interfaces
 - **WebApi**: Controllers, Endpoints, Middleware, Filters, Mappings
 - **WebApp**: Pages, Components, Models, Services
@@ -110,13 +113,15 @@ Each project follows a consistent internal structure:
 
 ## Building and Running
 
-### Build the entire solution:
+### Build the entire solution
+
 ```bash
 cd /home/fray/Projets/GingerTemp
 dotnet build
 ```
 
-### Run specific projects:
+### Run specific projects
+
 ```bash
 # Web API
 dotnet run --project src/GingerTemplate.WebApi/GingerTemplate.WebApi.csproj
@@ -160,17 +165,20 @@ GingerTemplate.Tests
 ## File Organization Best Practices
 
 ### One File Per Type (Usually)
+
 - Each service interface and implementation in the same file (e.g., `UserService.cs` contains both `IUserService` and `UserService`)
 - Each controller in its own file
 - Each model in its own file
 - Each CLI command in its own file
 
 ### Namespace Conventions
+
 ```
 GingerTemplate.{LayerOrFeature}.{SubCategory}
 ```
 
 Examples:
+
 - `GingerTemplate.Core.Services`
 - `GingerTemplate.Core.Models`
 - `GingerTemplate.Core.Exceptions`
@@ -179,6 +187,7 @@ Examples:
 - `GingerTemplate.CLI.Commands`
 
 ### Folder Names
+
 - Use **PascalCase** for folder names matching namespace segments
 - Keep folder hierarchy aligned with namespace structure
 - Avoid deep folder hierarchies (usually 3-4 levels maximum)

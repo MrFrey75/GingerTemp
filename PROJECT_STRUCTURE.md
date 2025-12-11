@@ -7,14 +7,17 @@
 The **GingerTemplate** solution has been successfully created with the following structure:
 
 ### Solution File
+
 - `GingerTemplate.sln` - Main solution file containing all projects
 
 ### Projects
 
 #### 1. **GingerTemplate.Core** (Class Library - net10.0)
+
 Core application logic, data access, and abstractions. This is the central project containing all business logic and data infrastructure.
 
 **Folders:**
+
 - `Models/` - Data models and DTOs (User.cs example created)
 - `Services/` - Service interfaces and implementations (LoggingService.cs, ConfigurationService.cs)
 - `Repositories/` - Repository pattern implementations (Repository.cs)
@@ -28,6 +31,7 @@ Core application logic, data access, and abstractions. This is the central proje
 - `Exceptions/` - Custom exception hierarchy
 
 **Key Files Created:**
+
 - `Exceptions/ApplicationException.cs` - Base exception class
 - `Exceptions/DomainExceptions.cs` - BusinessLogicException, ValidationException, AuthenticationException, AuthorizationException
 - `Exceptions/DataAccessExceptions.cs` - RepositoryException, DatabaseException
@@ -52,6 +56,7 @@ Core application logic, data access, and abstractions. This is the central proje
 - `config.production.json` - Production configuration (Warning logging, restricted CORS, Redis cache)
 
 **Dependencies:**
+
 - Serilog (4.3.0)
 - Serilog.Extensions.Logging (10.0.0)
 - Serilog.Sinks.File (6.0.0)
@@ -66,18 +71,22 @@ Core application logic, data access, and abstractions. This is the central proje
 ---
 
 #### 2. **GingerTemplate.WebApi** (ASP.NET Core Web API - net10.0)
+
 REST API implementation for backend services with Serilog logging and configuration service integration.
 
 **Folders:**
+
 - `Endpoints/` - API controllers and routes
 - `Middleware/` - Custom middleware components
 
 **Key Files Created:**
+
 - `Middleware/ExceptionHandlingMiddleware.cs` - Global exception handling with structured error responses
 - `Program.cs` - Serilog host configuration, DI setup for ILoggingService and IConfigurationService, /health endpoint
 - `appsettings.json` - Serilog configuration with console sink including CorrelationId in template
 
 **Dependencies:**
+
 - GingerTemplate.Core
 - Serilog.AspNetCore (10.0.0)
 - Serilog.Settings.Configuration (10.0.0)
@@ -88,17 +97,21 @@ REST API implementation for backend services with Serilog logging and configurat
 ---
 
 #### 3. **GingerTemplate.WebApp** (ASP.NET Core Razor Pages - net10.0)
+
 Web application for user interface with Serilog logging and configuration service integration.
 
 **Folders:**
+
 - `Pages/` - Razor Pages
 - `Components/` - Reusable components
 
 **Key Files Created:**
+
 - `Program.cs` - Serilog host configuration, DI setup for ILoggingService and IConfigurationService, /health endpoint
 - `appsettings.json` - Serilog configuration with console sink including CorrelationId in template
 
 **Dependencies:**
+
 - GingerTemplate.Core
 - Serilog.AspNetCore (10.0.0)
 - Serilog.Settings.Configuration (10.0.0)
@@ -109,18 +122,22 @@ Web application for user interface with Serilog logging and configuration servic
 ---
 
 #### 4. **GingerTemplate.CLI** (Console Application - net10.0)
+
 Command-line interface application for system administration and batch operations with Serilog logging and configuration service integration.
 
 **Folders:**
+
 - `Commands/` - CLI command definitions and handlers
 - `Options/` - Command-line argument parsing and configuration
 
 **Key Files Created:**
+
 - `Program.cs` - Host.CreateDefaultBuilder with Serilog, DI setup for ILoggingService and IConfigurationService, config loading example
 - `appsettings.json` - Serilog configuration with console sink
 - `.csproj` - appsettings.json included with CopyToOutputDirectory=PreserveNewest
 
 **Dependencies:**
+
 - GingerTemplate.Core
 - System.CommandLine (2.0.0-beta5)
 - Microsoft.Extensions.Hosting (10.0.1)
@@ -132,9 +149,11 @@ Command-line interface application for system administration and batch operation
 ---
 
 #### 5. **GingerTemplate.DesktopApp** (Avalonia Desktop App - net10.0)
+
 Cross-platform desktop application using Avalonia UI.
 
 **Dependencies:**
+
 - GingerTemplate.Core
 - Avalonia (11.3.9)
 - Avalonia.Desktop
@@ -144,17 +163,21 @@ Cross-platform desktop application using Avalonia UI.
 ---
 
 #### 6. **GingerTemplate.MobileApp** (Class Library - net10.0)
+
 Mobile application project (ready for .NET MAUI integration).
 
 **Dependencies:**
+
 - GingerTemplate.Core
 
 ---
 
 #### 7. **GingerTemplate.Tests** (xUnit Test Project - net10.0)
+
 Unit and integration tests.
 
 **Dependencies:**
+
 - GingerTemplate.Core
 - GingerTemplate.WebApi
 - xUnit
@@ -200,28 +223,33 @@ GingerTemplate.Tests net10.0 succeeded
 
 ## Getting Started
 
-### Build the solution:
+### Build the solution
+
 ```bash
 cd /home/fray/Projets/GingerTemp
 dotnet build
 ```
 
-### Run tests:
+### Run tests
+
 ```bash
 dotnet test
 ```
 
-### Run Web API:
+### Run Web API
+
 ```bash
 dotnet run --project GingerTemplate.WebApi
 ```
 
-### Run Web App:
+### Run Web App
+
 ```bash
 dotnet run --project GingerTemplate.WebApp
 ```
 
-### Run Desktop App:
+### Run Desktop App
+
 ```bash
 dotnet run --project GingerTemplate.DesktopApp
 ```
@@ -231,6 +259,7 @@ dotnet run --project GingerTemplate.DesktopApp
 ## Documentation Files
 
 The following documentation files are available:
+
 - `README.md` - Comprehensive project documentation
 - `CODING_STANDARDS.md` - C# coding standards and conventions
 - `LICENSE` - MIT License
@@ -261,4 +290,3 @@ The following documentation files are available:
 - **Testing**: xUnit, Moq
 - **Architecture**: Clean Architecture with MVVM patterns
 - **Dependency Injection**: Microsoft.Extensions.DependencyInjection
-

@@ -2,11 +2,12 @@
 
 > 📚 **Part of the [GingerTemplate Documentation](README.md)** - See also: [Project Structure](PROJECT_STRUCTURE.md) | [Folder Structure](FOLDER_STRUCTURE.md) | [Implementation Details](IMPLEMENTATION_COMPLETION.md)
 
-## ✅ Project Created Successfully!
+## ✅ Project Created Successfully
 
 Your GingerTemplate solution is now ready for development. Here's what has been set up:
 
 ### 📁 Solution Structure
+
 - **7 Projects** created and linked together
 - **Clean Architecture** with separation of concerns
 - **Error Handling** infrastructure in place
@@ -14,44 +15,54 @@ Your GingerTemplate solution is now ready for development. Here's what has been 
 
 ### 🚀 Quick Commands
 
-#### Build the solution:
+#### Build the solution
+
 ```bash
 cd /home/fray/Projets/GingerTemp
 dotnet build
 ```
 
-#### Run the Web API:
+#### Run the Web API
+
 ```bash
 dotnet run --project GingerTemplate.WebApi
 ```
+
 - Default URL: `https://localhost:5001` (or `http://localhost:5000`)
 - Swagger UI: `https://localhost:5001/swagger`
 
-#### Run the Web App:
+#### Run the Web App
+
 ```bash
 dotnet run --project GingerTemplate.WebApp
 ```
+
 - Default URL: `https://localhost:5001` (or `http://localhost:5000`)
 
-#### Run the CLI:
+#### Run the CLI
+
 ```bash
 dotnet run --project GingerTemplate.CLI
 ```
+
 - Loads configuration from config.json
 - Demonstrates logging with correlation scopes
 - Uses dependency injection for services
 
-#### Run the Desktop App:
+#### Run the Desktop App
+
 ```bash
 dotnet run --project GingerTemplate.DesktopApp
 ```
 
-#### Run Tests:
+#### Run Tests
+
 ```bash
 dotnet test
 ```
 
-#### Clean build artifacts:
+#### Clean build artifacts
+
 ```bash
 dotnet clean
 ```
@@ -61,6 +72,7 @@ dotnet clean
 ### 📦 What's Included
 
 #### Core Components
+
 ✅ Custom exception hierarchy for error handling
 ✅ User model with basic properties
 ✅ Logging service with correlation scope tracking and Serilog integration
@@ -72,11 +84,13 @@ dotnet clean
 ✅ User role and status enumerations
 
 #### Data Layer
+
 ✅ Entity Framework Core configured with SQLite
 ✅ DbContext with User entity configuration
 ✅ Generic Repository pattern (CRUD operations)
 
 #### Web API
+
 ✅ Serilog logging with correlation tracking
 ✅ Global exception handling middleware
 ✅ Structured error response format
@@ -85,11 +99,13 @@ dotnet clean
 ✅ Project references configured
 
 #### Web App
+
 ✅ Serilog logging with correlation tracking
 ✅ Configuration service integration
 ✅ /health endpoint
 
 #### CLI Application
+
 ✅ System.CommandLine integration
 ✅ Generic host with Serilog
 ✅ Dependency injection setup
@@ -97,6 +113,7 @@ dotnet clean
 ✅ Correlation scope support
 
 #### Testing
+
 ✅ xUnit test framework
 ✅ Moq for mocking
 ✅ All projects referenced
@@ -106,7 +123,9 @@ dotnet clean
 ### 🔧 Configuration Steps
 
 #### 1. Update Database Connection String
+
 Edit `GingerTemplate.WebApi/appsettings.json`:
+
 ```json
 {
   "ConnectionStrings": {
@@ -116,6 +135,7 @@ Edit `GingerTemplate.WebApi/appsettings.json`:
 ```
 
 #### 2. Create Initial Database Migration
+
 ```bash
 cd GingerTemplate.Data
 dotnet ef migrations add InitialCreate
@@ -123,7 +143,9 @@ dotnet ef database update
 ```
 
 #### 3. Configure Dependency Injection
+
 Edit `GingerTemplate.WebApi/Program.cs`:
+
 ```csharp
 // Add services
 services.AddScoped<IRepository<User>, Repository<User>>();
@@ -138,7 +160,9 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 ```
 
 #### 4. Create Your First Service
+
 Example structure in `GingerTemplate.Core/Services/`:
+
 ```csharp
 public interface IUserService
 {
@@ -172,7 +196,9 @@ public class UserService : IUserService
 ```
 
 #### 5. Create Your First API Endpoint
+
 Create `GingerTemplate.WebApi/Endpoints/UsersController.cs`:
+
 ```csharp
 [ApiController]
 [Route("api/[controller]")]
@@ -262,22 +288,26 @@ public class UsersController : ControllerBase
 ### ❓ Troubleshooting
 
 **Build fails with package errors:**
+
 ```bash
 dotnet nuget locals all --clear
 dotnet restore
 ```
 
 **Database connection issues:**
+
 - Check connection string in appsettings.json
 - Verify SQLite file path exists
 - Run migrations again
 
 **Port already in use:**
+
 ```bash
 # Change port in appsettings.json or launchSettings.json
 ```
 
 **Missing dependencies:**
+
 ```bash
 cd [ProjectName]
 dotnet restore
