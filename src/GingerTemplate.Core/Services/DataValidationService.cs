@@ -6,6 +6,17 @@ using Microsoft.Extensions.Logging;
 
 namespace GingerTemplate.Core.Services;
 
+/// <summary>
+/// Provides basic data validation helpers for common primitive checks.
+/// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;IDataValidationService, DataValidationService&gt;();
+/// var validator = provider.GetRequiredService&lt;IDataValidationService&gt;();
+/// var ok = validator.ValidateData(userInput);
+/// </code>
+/// </remarks>
 public interface IDataValidationService
 {
     bool ValidateData<T>(T data);
@@ -18,6 +29,7 @@ public class DataValidationService : IDataValidationService
     public DataValidationService(ILogger<DataValidationService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("DataValidationService initialized.");
     }
 
     public bool ValidateData<T>(T data)

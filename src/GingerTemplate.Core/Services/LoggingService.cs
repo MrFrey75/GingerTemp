@@ -9,6 +9,15 @@ namespace GingerTemplate.Core.Services;
 /// <summary>
 /// Interface for logging service operations.
 /// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;ILoggingService, LoggingService&gt;();
+/// var log = provider.GetRequiredService&lt;ILoggingService&gt;();
+/// using var scope = log.BeginCorrelationScope();
+/// log.LogInformation("Processing request", new Dictionary&lt;string, object?&gt; { { "UserId", 42 } });
+/// </code>
+/// </remarks>
 public interface ILoggingService
 {
     string CurrentCorrelationId { get; }
@@ -33,6 +42,7 @@ public class LoggingService : ILoggingService
     public LoggingService(ILogger<LoggingService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("LoggingService initialized.");
     }
 
     public string CurrentCorrelationId => EnsureCorrelationId();

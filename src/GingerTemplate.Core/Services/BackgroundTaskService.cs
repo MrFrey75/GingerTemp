@@ -6,9 +6,22 @@ using Microsoft.Extensions.Logging;
 
 namespace GingerTemplate.Core.Services;
 
+/// <summary>
+/// Contract for managing background task scopes to ensure start/end symmetry.
+/// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;IBackgroundTaskService, BackgroundTaskService&gt;();
+/// var tasks = provider.GetRequiredService&lt;IBackgroundTaskService&gt;();
+/// using var scope = tasks.StartBackgroundTask("ImportJob");
+/// // work here, Dispose ends the task automatically
+/// </code>
+/// </remarks>
 public interface IBackgroundTaskService
 {
     IDisposable StartBackgroundTask(string taskName);
+    void EndBackgroundTask(string taskName);
 }
 
 public class BackgroundTaskService : IBackgroundTaskService
@@ -19,6 +32,7 @@ public class BackgroundTaskService : IBackgroundTaskService
     public BackgroundTaskService(ILogger<BackgroundTaskService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("BackgroundTaskService initialized.");
     }
 
     public IDisposable StartBackgroundTask(string taskName)
@@ -32,7 +46,7 @@ public class BackgroundTaskService : IBackgroundTaskService
         return new BackgroundTaskScope(this, taskName);
     }
 
-    private void EndBackgroundTask(string taskName)
+    public void EndBackgroundTask(string taskName)
     {
         var stack = TaskStackContext.Value;
         if (stack == null || stack.Count == 0 || stack.Peek() != taskName)

@@ -6,6 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace GingerTemplate.Core.Services;
 
+/// <summary>
+/// Manages application theme selection and retrieval.
+/// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;IThemeManagementService, ThemeManagementService&gt;();
+/// var themes = provider.GetRequiredService&lt;IThemeManagementService&gt;();
+/// themes.ApplyTheme("Dark");
+/// var current = themes.GetCurrentTheme();
+/// </code>
+/// </remarks>
 public interface IThemeManagementService
 {
     void ApplyTheme(string themeName);
@@ -21,6 +33,7 @@ public class ThemeManagementService : IThemeManagementService
     public ThemeManagementService(ILogger<ThemeManagementService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("ThemeManagementService initialized.");
     }
 
     public void ApplyTheme(string themeName)

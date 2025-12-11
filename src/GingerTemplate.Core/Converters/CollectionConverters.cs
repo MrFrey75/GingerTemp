@@ -23,4 +23,37 @@ public static class CollectionConverters
     {
         return source == null ? new List<T>() : new List<T>(source);
     }
+
+    /// <summary>
+    /// Converts an enumerable to an array. Returns an empty array when source is null.
+    /// </summary>
+    /// <returns></returns>
+    public static T[] ToArraySafe<T>(this IEnumerable<T> source)
+    {
+        return source == null ? Array.Empty<T>() : System.Linq.Enumerable.ToArray(source);
+    }
+
+    /// <summary>
+    /// Converts a sequence to a dictionary using the provided key selector and comparer.
+    /// </summary>
+    public static Dictionary<TKey, TElement> ToDictionarySafe<TSource, TKey, TElement>(
+        this IEnumerable<TSource> source,
+        Func<TSource, TKey> keySelector,
+        Func<TSource, TElement> elementSelector,
+        IEqualityComparer<TKey>? comparer = null)
+    {
+        var dictionary = new Dictionary<TKey, TElement>(comparer);
+        if (source == null)
+        {
+            return dictionary;  
+        } else 
+        {
+            foreach (var item in source)
+            {
+                dictionary[keySelector(item)] = elementSelector(item);
+            }
+            return dictionary;
+        }
+    }
+
 }

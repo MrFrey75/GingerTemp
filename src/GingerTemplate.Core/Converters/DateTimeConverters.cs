@@ -40,4 +40,12 @@ public static class DateTimeConverters
     {
         return UnixEpoch.AddSeconds(seconds).UtcDateTime;
     }
+
+    /// <summary>
+    /// Creates a DateTime from Unix epoch seconds (local time).
+    /// </summary>
+    public static DateTime FromUnixTimeSecondsLocal(this long seconds)
+    {
+        return UnixEpoch.AddSeconds(seconds).LocalDateTime;
+    }
 }

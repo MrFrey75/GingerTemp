@@ -6,6 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace GingerTemplate.Core.Services;
 
+/// <summary>
+/// Provides simple plugin loading and listing capabilities.
+/// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;IPluginService, PluginService&gt;();
+/// var plugins = provider.GetRequiredService&lt;IPluginService&gt;();
+/// plugins.LoadPlugin("/plugins/reports.dll");
+/// var loaded = plugins.GetLoadedPlugins();
+/// </code>
+/// </remarks>
 public interface IPluginService
 {
     void LoadPlugin(string pluginPath);
@@ -21,6 +33,7 @@ public class PluginService : IPluginService
     public PluginService(ILogger<PluginService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("PluginService initialized.");
     }
 
     public void LoadPlugin(string pluginPath)

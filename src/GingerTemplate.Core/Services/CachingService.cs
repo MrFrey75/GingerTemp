@@ -6,6 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace GingerTemplate.Core.Services;
 
+/// <summary>
+/// Provides lightweight in-memory caching with optional expiration and simple get/set semantics.
+/// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;ICachingService, CachingService&gt;();
+/// var cache = provider.GetRequiredService&lt;ICachingService&gt;();
+/// cache.SetItem("token", myToken, TimeSpan.FromMinutes(30));
+/// var token = cache.GetItem&lt;string&gt;("token");
+/// </code>
+/// </remarks>
 public interface ICachingService
 {
     TItem? GetItem<TItem>(string key);
@@ -23,6 +35,7 @@ public class CachingService : ICachingService
     public CachingService(ILogger<CachingService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("CachingService initialized.");
     }
 
     public TItem? GetItem<TItem>(string key)

@@ -10,6 +10,15 @@ namespace GingerTemplate.Core.Services;
 /// <summary>
 /// Interface for configuration service operations.
 /// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;IConfigurationService&gt;(sp => new ConfigurationService("config.json", sp.GetRequiredService&lt;ILogger&lt;ConfigurationService&gt;&gt;()));
+/// var config = sp.GetRequiredService&lt;IConfigurationService&gt;();
+/// var db = config.GetSection&lt;DatabaseSettings&gt;("Database");
+/// var timeout = config.GetValue<int>("Api:TimeoutSeconds", 30);
+/// </code>
+/// </remarks>
 public interface IConfigurationService
 {
     T GetSection<T>(string sectionName) where T : class;
@@ -30,9 +39,12 @@ public class ConfigurationService : IConfigurationService
 {
     private readonly Dictionary<string, JsonElement> _configuration;
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly ILogger<ConfigurationService> _logger;
 
-    public ConfigurationService(string configPath)
+    public ConfigurationService(string configPath, ILogger<ConfigurationService> logger)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _logger.LogInformation("ConfigurationService initialized.");
         _configuration = new Dictionary<string, JsonElement>();
         _jsonOptions = new JsonSerializerOptions
         {

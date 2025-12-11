@@ -6,6 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace GingerTemplate.Core.Services;
 
+/// <summary>
+/// Provides simple file system storage helpers for saving, retrieving, and deleting files.
+/// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton&lt;IFileStorageService, FileStorageService&gt;();
+/// var files = provider.GetRequiredService&lt;IFileStorageService&gt;();
+/// files.SaveFile("/tmp/data.bin", bytes);
+/// var content = files.GetFile("/tmp/data.bin");
+/// </code>
+/// </remarks>
 public interface IFileStorageService
 {
     void SaveFile(string path, byte[] content);
@@ -22,6 +34,7 @@ public class FileStorageService : IFileStorageService
     public FileStorageService(ILogger<FileStorageService> logger)
     {
         _logger = logger;
+        _logger.LogInformation("FileStorageService initialized.");
     }
 
     public void SaveFile(string path, byte[] content)

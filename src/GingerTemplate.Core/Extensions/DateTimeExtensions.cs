@@ -12,4 +12,20 @@ public static class DateTimeExtensions
     {
         return dateTime.ToString(format);
     }
+
+    /// <summary>
+    /// Converts a DateTime to Unix epoch seconds.
+    /// </summary>
+    public static long ToUnixTimeSeconds(this DateTime dateTime)
+    {
+        return new DateTimeOffset(dateTime.ToUniversalTime()).ToUnixTimeSeconds();  
+    }
+
+    /// <summary>
+    /// Creates a DateTime from Unix epoch seconds.
+    /// </summary>
+    public static DateTime FromUnixTimeSeconds(this long seconds)
+    {
+        return DateTimeOffset.FromUnixTimeSeconds(seconds).UtcDateTime;
+    }
 }

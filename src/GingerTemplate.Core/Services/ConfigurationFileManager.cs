@@ -10,14 +10,25 @@ namespace GingerTemplate.Core.Services;
 /// <summary>
 /// Manager for loading configuration files from a directory.
 /// </summary>
+/// <remarks>
+/// Usage:
+/// <code>
+/// services.AddSingleton(sp => new ConfigurationFileManager("./config", sp.GetRequiredService&lt;ILogger&lt;ConfigurationFileManager&gt;&gt;()));
+/// var files = sp.GetRequiredService&lt;ConfigurationFileManager&gt;();
+/// var appConfig = files.LoadConfigurationFile&lt;ApplicationConfiguration&gt;("config.json");
+/// </code>
+/// </remarks>
 public class ConfigurationFileManager
 {
     private readonly string _configDirectory;
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly ILogger<ConfigurationFileManager> _logger;
 
-    public ConfigurationFileManager(string configDirectory)
+    public ConfigurationFileManager(string configDirectory, ILogger<ConfigurationFileManager> logger)
     {
         _configDirectory = configDirectory ?? throw new ArgumentNullException(nameof(configDirectory));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _logger.LogInformation("ConfigurationFileManager initialized.");
         _jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
